@@ -1,0 +1,7 @@
+#!/bin/sh
+/sbin/modprobe nfsd >/dev/null 2>&1
+/bin/tar -xvf /usr/share/nfs/nfsvar.tar -C / >/dev/null 2>&1
+/usr/sbin/exportfs -r
+/usr/sbin/rpc.nfsd
+/usr/sbin/rpc.mountd
+

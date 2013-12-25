@@ -1,0 +1,5 @@
+DEFAULT linux
+
+LABEL linux
+KERNEL bzimage
+APPEND initrd=ramdisk.gz ramdisk_size=32768 root=/dev/ram0 rw

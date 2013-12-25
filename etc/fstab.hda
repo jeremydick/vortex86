@@ -1,0 +1,8 @@
+/dev/hda1	/boot		msdos		ro,defaults		0 0
+/dev/hda2	/		ext2		defaults,noatime	0 1
+
+none		/proc		proc		defaults		0 0
+none		/dev/shm	tmpfs		defaults		0 0
+devpts		/dev/pts	devpts		defaults		0 0
+
+#host:/		/		nfs		noauto,hard,bg,intr	0 0

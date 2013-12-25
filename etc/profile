@@ -1,0 +1,5 @@
+uname -a
+echo
+export PS1="[\u@\h]:\w \# "
+
+

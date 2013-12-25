@@ -1,0 +1,119 @@
+#!/bin/sh
+Linux_string=X-Linux
+
+echo "Init..."
+
+echo "$Linux_string: Mounting proc at /proc"
+/bin/mount -t proc proc /proc
+
+# echo "$Linux_string: Checking root filesystem"
+# /sbin/fsck -C -T -a /
+# retval=$?
+# if [ $retval -eq 2 ] || [ $retval -eq 3 ] ; then
+#	echo "Filesystem repaired!"
+#	echo "Rebooting."
+#	/sbin/reboot -d1 
+# fi
+
+echo "$Linux_string: Mounting tmpfs filesystem"
+/bin/mount -t tmpfs tmpfs /dev/shm
+
+# replace the ramdisk with the tmpfs for /var and /tmp
+echo $Linux_string: Making /var and /tmp to bind the tmpfs
+mkdir -m 777 /dev/shm/tmp /dev/shm/var
+mount -o bind /dev/shm/tmp /tmp
+mount -o bind /dev/shm/var /var
+mkdir -m 777 /var/run /var/log /var/lock /var/empty /var/lib
+mkdir -m 777 /var/lib/nfs
+echo "">/var/lib/nfs/etab
+
+echo "$Linux_string: Mounting devpts at /dev/pts"
+/bin/mount -t devpts devpts /dev/pts
+
+# echo $Linux_string: Remount root filesystem readable/writable
+# /bin/mount -o remount,rw /
+
+/bin/hostname $Linux_string
+
+echo $Linux_string: Bringing lo up
+/sbin/ifconfig lo 127.0.0.1 up 2>/dev/null
+/sbin/route add -net 127.0.0.0 netmask 255.0.0.0 gw 127.0.0.1 dev lo 2>/dev/null
+
+ifconfig eth0 192.168.0.222 netmask 255.255.255.0 up >/dev/null 2>&1
+/sbin/route add default gw 192.168.0.1
+
+#
+# Add bridge
+# echo 0 > /proc/sys/net/ipv4/ip_forward
+# ifconfig eth0 0.0.0.0 up >/dev/null 2>&1
+# ifconfig eth1 0.0.0.0 up >/dev/null 2>&1
+# ifconfig eth2 0.0.0.0 up >/dev/null 2>&1
+# brctl addbr br0 >/dev/null 2>&1
+# brctl addif br0 eth0 >/dev/null 2>&1
+# brctl addif br0 eth1 >/dev/null 2>&1
+# brctl addif br0 eth2 >/dev/null 2>&1
+# ifconfig br0 192.168.0.225 netmask 255.255.255.0 up >/dev/null 2>&1
+#
+# Set IP address
+# ifconfig eth1 192.168.0.223 netmask 255.255.255.0 up >/dev/null 2>&1
+# ifconfig eth2 192.168.0.224 netmask 255.255.255.0 up >/dev/null 2>&1
+#
+# echo $Linux_string: Getting IP from DHCP server
+# udhcpc >/dev/null 2>&1
+
+echo $Linux_string: Starting inetd...
+/sbin/inetd
+
+echo $Linux_string: Starting telnetd...
+/sbin/telnetd
+
+echo $Linux_string: Starting ftpd...
+/bin/tcpsvd -vE 0.0.0.0 21 ftpd -w / &
+
+# echo $Linux_string: Starting sshd...
+# /sbin/dropbear
+
+echo $Linux_string: Starting httpd...
+/sbin/httpd -h /www
+
+# if you want to use NFS client or server, uncomment following 2 lines.
+# echo $Linux_string: Starting portmap...
+# /sbin/portmap
+
+# if you want to enable NFS server daemon, uncomment following 2 lines.
+# echo $Linux_string: Starting NFS server...
+# /sbin/nfsd
+
+echo "$Linux_string: Mounting local filesystems"
+/bin/mount -a
+/bin/mount -t sysfs sys /sys
+
+#echo "config serial port"
+
+#echo "config COM1"
+#setserial /dev/ttyS0 irq 4 port 0x3F8 uart 16550A
+
+#echo "config COM2"
+#setserial /dev/ttyS1 irq 3 port 0x2F8 uart 16550A
+
+#echo "config COM3"
+#setserial /dev/ttyS2 irq 4 port 0x3E8 uart 16550A
+
+#echo "config COM4"
+#setserial /dev/ttyS3 irq 11 port 0x2E8 uart 16550A
+
+#echo "config COM5"
+#setserial /dev/ttyS4 irq 4 port 0x338 uart 16550A
+
+#echo "config COM6"
+#setserial /dev/ttyS5 irq 3 port 0x238 uart 16550A
+
+#echo "config COM7"
+#setserial /dev/ttyS6 irq 10 port 0x228 uart 16550A ^fourport
+
+#echo "config COM8"
+#setserial /dev/ttyS7 irq 11 port 0x220 uart 16550A 
+
+#echo "config COM9"
+#setserial /dev/ttyS8 irq 9 port 0x3F8 uart 16550A
+
