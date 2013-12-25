@@ -44,17 +44,21 @@ if [ "$DEV_NODE" == "1" ]; then
   
   echo Make partitions
   umount /boot > /dev/null 2>&1
-  fdisk $1 < ./fdisk.in > /dev/null
+  if [ "$(hostname)" == "X-Linux" ]; then
+    fdisk $1 < ./fdisk.in > /dev/null
+  else
+    sudo fdisk $1 < ./fdisk.in > /dev/null
+  fi
   
   echo Fromat "$1"1
   
-  if [ "$(hostname)" == "X-Linux" ]; then
+  #if [ "$(hostname)" == "X-Linux" ]; then
     mkdosfs "$1"1 > /dev/null 2>&1
     syslinux "$1"1
-  else
-    ../sbin/mkdosfs "$1"1 > /dev/null 2>&1
-    ../sbin/syslinux "$1"1
-  fi
+  #else
+  #  ../sbin/mkdosfs "$1"1 > /dev/null 2>&1
+  #  ../sbin/syslinux "$1"1
+  #fi
   
   echo Install boot loader
   mount "$1"1 $IMAGE_PATH
@@ -63,7 +67,7 @@ if [ "$DEV_NODE" == "1" ]; then
   echo "KERNEL bzimage" >> $IMAGE_PATH/syslinux.cfg
 
   if [ "$1" == "/dev/sda" ] || [ "$1" == "/dev/sdb" ]; then
-    echo "APPEND root=$1"2 rootdelay=10 >> $IMAGE_PATH/syslinux.cfg
+    echo "APPEND root=/dev/sda2 rootdelay=10" >> $IMAGE_PATH/syslinux.cfg
   else
     echo "APPEND root=$1"2 >> $IMAGE_PATH/syslinux.cfg
   fi
@@ -106,13 +110,25 @@ mkdir boot bin dev etc home lib mnt proc root sbin sys tmp usr var ./usr/bin ./u
 chmod -R 755 *
 
 echo Install BusyBox
-../make-busybox.sh
+if [ "$(hostname)" == "X-Linux" ]; then
+  ../make-busybox.sh
+else
+  bash ../make-busybox.sh
+fi
 
 echo Make device nodes
-../make-devs.sh
+if [ "$(hostname)" == "X-Linux" ]; then
+  ../make-devs.sh
+else
+  bash ../make-devs.sh
+fi
 
 echo Copy directories
-../make-copy-dir.sh $1
+if [ "$(hostname)" == "X-Linux" ]; then
+  ../make-copy-dir.sh $1
+else
+  bash ../make-copy-dir.sh $1
+fi
 
 echo Sync
 sync
@@ -146,10 +162,7 @@ elif [ "$1" == "img" ] || [ "$1" == "imgbb" ]; then
   
 fi
 
-cd $IMAGE_PATH
-rm -rf *
-cd ..
-rmdir $IMAGE_PATH
+rm -rf $IMAGE_PATH
 
 echo Done!
 echo
