@@ -1,0 +1,11 @@
+--- /cups-1.7.0/man/Makefile	2013-12-25 19:48:09.764688024 -0600
++++ /cups-1.7.0/man/Makefile	2013-12-25 19:48:09.764688024 -0600
+@@ -218,7 +218,7 @@
+ 	done
+ 
+ mantohtml:	mantohtml.o
+-	$(CC) $(ARCHFLAGS) $(LDFLAGS) -o $@ mantohtml.o
++	gcc -I/usr/include -I../ -I/usr/lib mantohtml.c -o mantohtml
+ 
+ 
+ #

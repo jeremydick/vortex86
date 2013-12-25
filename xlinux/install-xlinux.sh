@@ -106,7 +106,7 @@ fi
 cd $IMAGE_PATH
 
 echo Make basic directories
-mkdir boot bin dev etc home lib mnt proc root sbin sys tmp usr var ./usr/bin ./usr/sbin ./var/run ./var/lib ./var/lock ./var/log
+mkdir boot bin dev etc home lib mnt proc root sbin sys tmp usr var ./usr/bin ./usr/sbin ./var/run ./var/lib ./var/lock ./var/log ./var/spool
 chmod -R 755 *
 
 echo Install BusyBox

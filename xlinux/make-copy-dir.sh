@@ -8,7 +8,7 @@ fi
 
 cp -a $prefix/etc  ./
 chmod -R 644 ./etc/*
-chmod 744 ./etc/init.d/rcS
+chmod -R 744 ./etc/init.d/
 chmod 744 ./etc/profile
 
 if [ "$1" == "/dev/sda" ] || [ "$1" == "/dev/sdb" ]; then
@@ -24,7 +24,8 @@ if [ "$1" != "imgbb" ]; then
   chmod -R 755 ./bin/*
 
   cp -a $prefix/lib ./
-  chmod -R 777 ./lib/*
+  chmod -R 755 ./lib/*
+  chmod 777 ./lib/*
   
   rm -f ./sbin/mkdosfs
   rm -f ./sbin/mke2fs
@@ -33,7 +34,7 @@ if [ "$1" != "imgbb" ]; then
 
   cp -a $prefix/usr ./
   chmod -R 755 ./usr/*
-  chmod -R 777 ./usr/lib/*
+  chmod 777 ./usr/lib/*
 
   mkdir xlinux
   cp $prefix/xlinux/*.sh ./xlinux

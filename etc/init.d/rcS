@@ -23,7 +23,9 @@ echo $Linux_string: Making /var and /tmp to bind the tmpfs
 mkdir -m 777 /dev/shm/tmp /dev/shm/var
 mount -o bind /dev/shm/tmp /tmp
 mount -o bind /dev/shm/var /var
-mkdir -m 777 /var/run /var/log /var/lock /var/empty /var/lib
+mkdir -m 777 /var/run /var/log /var/lock /var/empty /var/lib /var/spool
+mkdir -m 777 /var/run/cups /var/run/cups/certs
+mkdir -m 777 /var/spool/cups /var/spool/cups/tmp
 mkdir -m 777 /var/lib/nfs
 echo "">/var/lib/nfs/etab
 
@@ -58,8 +60,8 @@ ifconfig eth0 192.168.0.222 netmask 255.255.255.0 up >/dev/null 2>&1
 # ifconfig eth1 192.168.0.223 netmask 255.255.255.0 up >/dev/null 2>&1
 # ifconfig eth2 192.168.0.224 netmask 255.255.255.0 up >/dev/null 2>&1
 #
-# echo $Linux_string: Getting IP from DHCP server
-# udhcpc >/dev/null 2>&1
+#echo $Linux_string: Getting IP from DHCP server
+#udhcpc >/dev/null 2>&1
 
 echo $Linux_string: Starting inetd...
 /sbin/inetd
@@ -83,6 +85,9 @@ echo $Linux_string: Starting httpd...
 # if you want to enable NFS server daemon, uncomment following 2 lines.
 # echo $Linux_string: Starting NFS server...
 # /sbin/nfsd
+
+echo $Linux_string: Starting cupsd...
+/etc/init.d/cups start
 
 echo "$Linux_string: Mounting local filesystems"
 /bin/mount -a

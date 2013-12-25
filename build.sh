@@ -1,8 +1,10 @@
 umount /dev/sdb1
 umount /dev/sdb2
+#chmod +xxx lib/*
 cd cups
 #./make-cups.sh
 cd ..
+cp /lib/i386-linux-gnu/libm.so.6 lib/libm.so.6
 cd xlinux
-./xlinux-install.sh /dev/sdb
+sudo bash install-xlinux.sh /dev/sdb
 cd ..
