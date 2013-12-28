@@ -10,3 +10,18 @@ sudo make install DSTROOT=$ROOTDIR
 cd ..
 sudo cp cups-files.conf ../etc/cups/cups-files.conf
 sudo cp cupsd.conf ../etc/cups/cupsd.conf
+
+mkdir pkg
+cd pkg
+ar -x ../brmfc7420lpr-2.0.1-1.i386.deb
+sudo tar xvf data.tar.gz -C $ROOTDIR
+tar xvf control.tar.gz
+sudo cp postinst $ROOTDIR/etc/init.d/mfc7420-postinst
+rm *
+ar -x ../cupswrapperMFC7420-2.0.1-2.i386.deb
+sudo tar xvf data.tar.gz -C $ROOTDIR
+tar xvf control.tar.gz
+sudo cp postinst $ROOTDIR/etc/init.d/cupsmfc7420-postinst
+rm *
+cd ..
+rmdir pkg

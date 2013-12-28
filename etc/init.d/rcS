@@ -32,8 +32,10 @@ echo "">/var/lib/nfs/etab
 echo "$Linux_string: Mounting devpts at /dev/pts"
 /bin/mount -t devpts devpts /dev/pts
 
-# echo $Linux_string: Remount root filesystem readable/writable
-# /bin/mount -o remount,rw /
+if [ ! -f /etc/init.d/cache-ready ];then
+  echo $Linux_string: Remount root filesystem readable/writable
+  /bin/mount -o remount,rw /
+fi
 
 /bin/hostname $Linux_string
 
@@ -86,12 +88,30 @@ echo $Linux_string: Starting httpd...
 # echo $Linux_string: Starting NFS server...
 # /sbin/nfsd
 
+echo $Linux_string: Installing MFC7420 driver
+/etc/init.d/mfc7420-postinst
+
+echo $Linux_string: Installing CUPS MFC7420 wrapper
+/etc/init.d/cupsmfc7420-postinst
+
+if [ -e /etc/init.d/mfc7420-postinst ];then
+  sync
+  reboot
+fi
+
 echo $Linux_string: Starting cupsd...
 /etc/init.d/cups start
 
 echo "$Linux_string: Mounting local filesystems"
 /bin/mount -a
 /bin/mount -t sysfs sys /sys
+
+if [ ! -f /etc/init.d/cache-ready ];then
+  echo $Linux_string: Rebooting after first-time inits
+  echo "" >> /etc/init.d/cache-ready
+  sync
+  reboot
+fi
 
 #echo "config serial port"
 
