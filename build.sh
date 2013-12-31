@@ -1,6 +1,9 @@
 umount /dev/sdb1
 umount /dev/sdb2
 #chmod +xxx lib/*
+cd kernel
+#./make-kernel.sh
+cd ..
 cd cups
 #./make-cups.sh
 cd ..

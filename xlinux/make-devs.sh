@@ -7,11 +7,13 @@ mkdir -m 755 input
 mkdir -m 1777 shm
 mkdir -m 755 pts
 mkdir -m 755 misc
+mkdir -m 755 usb
 
 mknod -m 660 input/mice c 13 63
 mknod -m 660 input/mouse0 c 13 32
 mknod -m 660 misc/psaux c 10 1
 mknod -m 660 misc/rtc c 254 0
+mknod -m 666 usb/lp0 c 180 0
 
 mknod -m 600 hda b 3 0
 mknod -m 600 hda1 b 3 1

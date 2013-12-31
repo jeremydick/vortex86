@@ -1,8 +1,8 @@
-#tar -xvf cups-1.7.0-source.tar.bz2
-#patch -N -p1 < mantohtml.patch
-#patch -N -p1 < genstrings.patch
+tar -xvf cups-1.7.0-source.tar.bz2
+patch -N -p1 < mantohtml.patch
+patch -N -p1 < genstrings.patch
 cd cups-1.7.0
-#./configure --host=i386 --disable-gssapi
+./configure --host=i386 --disable-gssapi
 ROOTDIR="$(dirname "$(dirname "$PWD")")"
 export LIBRARY_PATH="$ROOTDIR/lib/:$ROOTDIR/usr/lib/"
 make OPTIONS="-D_FORTIFY_SOURCE=0 -march=i386"
@@ -25,3 +25,4 @@ sudo cp postinst $ROOTDIR/etc/init.d/cupsmfc7420-postinst
 rm *
 cd ..
 rmdir pkg
+rm -rf cups-1.7.0
